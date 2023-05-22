@@ -33,7 +33,6 @@ export class SignupComponent {
 
   onSubmit(){
     if(this.signUpForm.valid){      
-      console.log(this.signUpForm.value);
       // send the object to database
       this.auth.signUp(this.signUpForm.value)
       .subscribe({
@@ -46,7 +45,6 @@ export class SignupComponent {
           alert(err?.error.message);
         })
       })
-
     }else{
 
       ValidateForm.validateAllFormFields(this.signUpForm);
