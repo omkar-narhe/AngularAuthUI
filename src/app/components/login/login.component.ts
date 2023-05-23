@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import ValidateForm from 'src/app/helpers/validateForm';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -19,7 +20,8 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router){
+    private router: Router,
+    private toast: NgToastService){
     this.loginForm = fb.group({
       username:['', Validators.required],
       password: ['', Validators.required]
@@ -38,19 +40,21 @@ export class LoginComponent {
       this.auth.login(this.loginForm.value)
       .subscribe({
         next:(res)=>{
-          alert(res.message);
+          //alert(res.message);
+          this.toast.success({detail: "SUCCESS", summary: res.message, duration: 5000});
           this.loginForm.reset();
           this.router.navigate(['dashboard']);
         },
         error:(err)=>{
-          alert(err?.error.message);
+          //alert(err?.error.message);
+          this.toast.error({detail: "ERROR", summary: "Something went wrong!", duration: 5000});
         }
       })
     }else{
       //throw error using toaster and with required field
       ValidateForm.validateAllFormFields(this.loginForm);
-      alert("Form is invalid");
-
+      //alert("Form is invalid");
+      this.toast.error({detail: "ERROR", summary: "Form is invalid!", duration: 5000});
     }
   }
 }
