@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -6,8 +7,17 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
-  constructor(private auth: AuthService){}
+export class DashboardComponent implements OnInit {
+  public users: any = [];
+  constructor(private auth: AuthService, private api: ApiService){}
+
+  ngOnInit(): void {
+    this.api.getUsers()
+    .subscribe(res =>{
+      this.users = res;
+    });
+  }
+
   logOut(){
     this.auth.signOut();
   }
